@@ -14,6 +14,7 @@ const userSchema = new Schema({
   userBalance: { type: Number, default: 0 },
   userChatPoints: { type: Number, default: 0 },
   userVoicePoints: { type: Number, default: 0 },
+  userVoiceTime: { type: Number, default: 0 },
   userEquipment: { type: Array, default: [] },
 });
 

@@ -5,6 +5,8 @@ const { Client, GatewayIntentBits, REST, Routes } = require("discord.js");
 const userCommand = require("./commands/userCommand.js");
 const creationUserInDatabase = require("./events/creationUserInDatabase.js");
 const userMessage = require("./messages/userMessage.js");
+const ratingMessage = require("./messages/ratingMessage.js");
+const voiceClient = require("./client/VoiceClient.js");
 
 config();
 
@@ -42,9 +44,24 @@ client.on("messageCreate", async (message) => {
   await creationUserInDatabase(message.author);
 });
 
+client.on("voiceStateUpdate", (oldState, newState) => {
+  voiceClient.startListener(oldState, newState);
+  console.log(newState);
+});
+
 client.on("interactionCreate", async (interaction) => {
   if (interaction.isChatInputCommand()) {
     if (interaction.commandName === "user") {
+      await userMessage(interaction);
+    }
+  } else if (interaction.isButton()) {
+    if (interaction.customId === "replenish") {
+    } else if (interaction.customId === "clan") {
+    } else if (interaction.customId === "rating") {
+      await ratingMessage(interaction);
+    } else if (interaction.customId === "couple") {
+    } else if (interaction.customId === "edit") {
+    } else if (interaction.customId === "back") {
       await userMessage(interaction);
     }
   }
