@@ -46,80 +46,57 @@ module.exports = async (interaction) => {
     <style>
       body {
         font-family: "Poppins", Arial, Helvetica, sans-serif;
-        background-image: url(${user.userBackground});
-        background-size: cover;
-        background-position: center;
+        background-color: #161616;
         color: #fff;
-        font-size: 12px;
+        font-size: 9px;
         min-width: 900px;
-        text-align: center;
-        
+        text-align: center
       }
       .flex {
         display: flex;
         flex-direction: row;
         padding: 25px;
-        justify-content: space-around;
       }
       .row {
+      	margin-left: 100px;
         display: flex;
         align-items: center;
-        flex-direction: column;
+        flex-direction: row;
         width: 250px;
         min-height: 120px;
       }
       .box {
-      	margin-bottom: 30px;
+        margin-bottom: 30px;
         padding: 10px;
         height: 170px;
         width: 200px;
         background-color: #435;
-        word-wrap: break-word;
       }
       .box:last-child {
         margin-bottom: 0;
       }
       .image {
-      	border-radius: 50%;
-        height: 250px;
-        width: 250px;
+        border-radius: 50%;
+        height: 300px;
+        width: 300px;
+        margin-right: 50px;
       }
       .status {
-      	margin-top: 10px;
-      	height: 215px;
+        margin-top: 10px;
+        height: 215px;
         width: 250px;
-        font-size: 9px;
-        word-wrap: break-word;
       }
       .nickname {
-      	height: 35px;
+        height: 35px;
         width: 250px;
-        font-size: 9px;
       }
       .suptitle {
-      	font-size: 25px;
+        font-size: 25px;
       }
     </style>
   </head>
   <body>
     <div class="flex">
-        <div class="row">
-          <div class="box">
-            <h1 class="">Баланс</h1>
-            <h2 class="suptitle">$${user.userBalance}</h2>
-          </div>
-          <div class="box">
-            <h1 class="">Брак</h1>
-            <h2 class="suptitle">${user.userMarriage}</h2>
-          </div>
-          <div class="box">
-            <h1 class="">Рейтинг по чату</h1>
-            <h2 class="suptitle">${indexUserChatPoints + 1} (${
-    user.userChatPoints
-  })</h2>
-          </div>
-        </div>
-
         <div class="row">
           <div class="box image">
             <img class="image" src=${
@@ -128,38 +105,23 @@ module.exports = async (interaction) => {
                 : "https://cdn.discordapp.com/embed/avatars/0.png"
             } /> 
           </div>
-          <div class="box nickname">
-            <h1 class="">${
-              interaction.member.nickname !== null
-                ? interaction.member.nickname.length > 15
-                  ? `${interaction.member.nickname.slice(0, 13)}...#${
-                      user.discordHashtag
-                    }`
-                  : `${interaction.member.nickname}#${user.discordHashtag}`
-                : user.discordName.length > 15
-                ? `${user.discordName.slice(0, 13)}...#${user.discordHashtag}`
-                : `${user.discordName}#${user.discordHashtag}`
-            }</h1>
-          </div>
-          <div class="box status">
-            <h1 class="">${user.userStatus}</h1>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="box">
-            <h1 class="">Предметов в инвентаре</h1>
-            <h2 class="suptitle">${user.userEquipment.length}</h2>
-          </div>
-          <div class="box">
-            <h1 class="">Клан</h1>
-            <h2 class="suptitle">${user.userClan}</h2>
-          </div>
-          <div class="box">
-            <h1 class="">Рейтинг по войсу</h1>
-            <h2 class="suptitle">${indexUserVoicePoints + 1} (${
-    user.userVoicePoints
-  })</h2>
+          <div>
+          	<div class="box nickname">
+              <h1 class="">${
+                interaction.member.nickname !== null
+                  ? interaction.member.nickname.length > 15
+                    ? `${interaction.member.nickname.slice(0, 13)}...#${
+                        user.discordHashtag
+                      }`
+                    : `${interaction.member.nickname}#${user.discordHashtag}`
+                  : user.discordName.length > 15
+                  ? `${user.discordName.slice(0, 13)}...#${user.discordHashtag}`
+                  : `${user.discordName}#${user.discordHashtag}`
+              }</h1>
+            </div>
+            <div class="box status">
+              <h1 class="">${user.userStatus}</h1>
+            </div>
           </div>
         </div>
     </div>
@@ -187,34 +149,22 @@ module.exports = async (interaction) => {
     components: [
       new ActionRowBuilder().setComponents(
         new ButtonBuilder()
-          .setCustomId("replenish")
-          .setLabel("Пополнить")
-          .setStyle(ButtonStyle.Success)
-          .setEmoji("💸")
+          .setCustomId("userBgEdit")
+          .setLabel("Изменить фон")
+          .setStyle(ButtonStyle.Primary)
+          .setEmoji("🎨")
           .setDisabled(false),
         new ButtonBuilder()
-          .setCustomId("clan")
-          .setLabel("Клан")
+          .setCustomId("userStatusEdit")
+          .setLabel("Изменить статус")
+          .setStyle(ButtonStyle.Primary)
+          .setEmoji("🖊️")
+          .setDisabled(false),
+        new ButtonBuilder()
+          .setCustomId("back")
+          .setLabel("Назад на главную")
           .setStyle(ButtonStyle.Danger)
-          .setEmoji("🏰")
-          .setDisabled(false),
-        new ButtonBuilder()
-          .setCustomId("equipment")
-          .setLabel("Мой инвентарь")
-          .setStyle(ButtonStyle.Primary)
-          .setEmoji("📦")
-          .setDisabled(false),
-        new ButtonBuilder()
-          .setCustomId("couple")
-          .setLabel("Пара")
-          .setStyle(ButtonStyle.Primary)
-          .setEmoji("💞")
-          .setDisabled(false),
-        new ButtonBuilder()
-          .setCustomId("userEdit")
-          .setLabel("Редактировать")
-          .setStyle(ButtonStyle.Secondary)
-          .setEmoji("📝")
+          .setEmoji("🔙")
           .setDisabled(false)
       ),
     ],

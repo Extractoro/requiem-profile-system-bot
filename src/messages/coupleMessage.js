@@ -13,29 +13,6 @@ module.exports = async (interaction) => {
   await interaction.deferReply();
 
   let user = await User.findOne({ discordId: interaction.user.id });
-  let allUsers = await User.find();
-  let allUsers2 = await User.find();
-
-  const searchName = `${interaction.user.username}`;
-  const searchHash = `${interaction.user.discriminator}`;
-
-  const arrUserChatPoints = allUsers.sort(
-    (a, b) => b.userChatPoints - a.userChatPoints
-  );
-
-  const arrUserVoicePoints = allUsers2.sort(
-    (a, b) => b.userVoicePoints - a.userVoicePoints
-  );
-
-  const indexUserChatPoints = arrUserChatPoints.findIndex(
-    (el) =>
-      `${el.discordName}#${el.discordHashtag}` === `${searchName}#${searchHash}`
-  );
-
-  const indexUserVoicePoints = arrUserVoicePoints.findIndex(
-    (el) =>
-      `${el.discordName}#${el.discordHashtag}` === `${searchName}#${searchHash}`
-  );
 
   const _htmlTemplate = `<!DOCTYPE html>
 <html lang="en">
@@ -89,7 +66,6 @@ module.exports = async (interaction) => {
       	height: 215px;
         width: 250px;
         font-size: 9px;
-        word-wrap: break-word;
       }
       .nickname {
       	height: 35px;
@@ -97,6 +73,16 @@ module.exports = async (interaction) => {
         font-size: 9px;
       }
       .suptitle {
+        font-size: 30px;
+      }
+      .box-side {
+      	margin-bottom: 30px;
+        padding: 10px;
+        height: 280px;
+        width: 200px;
+        background-color: #435;
+      }
+      .h1 {
       	font-size: 25px;
       }
     </style>
@@ -104,19 +90,13 @@ module.exports = async (interaction) => {
   <body>
     <div class="flex">
         <div class="row">
-          <div class="box">
-            <h1 class="">Баланс</h1>
-            <h2 class="suptitle">$${user.userBalance}</h2>
+          <div class="box-side">
+            <h1 class="">В браке с</h1>
+            <h2 class="suptitle">${user.userMarriageWith}</h2>
           </div>
-          <div class="box">
-            <h1 class="">Брак</h1>
-            <h2 class="suptitle">${user.userMarriage}</h2>
-          </div>
-          <div class="box">
-            <h1 class="">Рейтинг по чату</h1>
-            <h2 class="suptitle">${indexUserChatPoints + 1} (${
-    user.userChatPoints
-  })</h2>
+          <div class="box-side">
+            <h1 class="">Инвентарь</h1>
+            <h2 class="suptitle">${user.userEquipment.length}</h2>
           </div>
         </div>
 
@@ -147,19 +127,13 @@ module.exports = async (interaction) => {
         </div>
 
         <div class="row">
-          <div class="box">
-            <h1 class="">Предметов в инвентаре</h1>
-            <h2 class="suptitle">${user.userEquipment.length}</h2>
+          <div class="box-side">
+            <h1 class="">Нравиться</h1>
+            <h2 class="suptitle">${user.userLike}</h2>
           </div>
-          <div class="box">
-            <h1 class="">Клан</h1>
-            <h2 class="suptitle">${user.userClan}</h2>
-          </div>
-          <div class="box">
-            <h1 class="">Рейтинг по войсу</h1>
-            <h2 class="suptitle">${indexUserVoicePoints + 1} (${
-    user.userVoicePoints
-  })</h2>
+          <div class="box-side">
+            <h1 class="">Подарено</h1>
+            <h2 class="suptitle">?</h2>
           </div>
         </div>
     </div>
@@ -187,34 +161,22 @@ module.exports = async (interaction) => {
     components: [
       new ActionRowBuilder().setComponents(
         new ButtonBuilder()
-          .setCustomId("replenish")
-          .setLabel("Пополнить")
+          .setCustomId("equipment-marriage")
+          .setLabel("Инвентарь пары")
           .setStyle(ButtonStyle.Success)
-          .setEmoji("💸")
-          .setDisabled(false),
-        new ButtonBuilder()
-          .setCustomId("clan")
-          .setLabel("Клан")
-          .setStyle(ButtonStyle.Danger)
-          .setEmoji("🏰")
-          .setDisabled(false),
-        new ButtonBuilder()
-          .setCustomId("equipment")
-          .setLabel("Мой инвентарь")
-          .setStyle(ButtonStyle.Primary)
           .setEmoji("📦")
           .setDisabled(false),
         new ButtonBuilder()
-          .setCustomId("couple")
-          .setLabel("Пара")
+          .setCustomId("marriage")
+          .setLabel("Отношения")
           .setStyle(ButtonStyle.Primary)
           .setEmoji("💞")
           .setDisabled(false),
         new ButtonBuilder()
-          .setCustomId("userEdit")
-          .setLabel("Редактировать")
-          .setStyle(ButtonStyle.Secondary)
-          .setEmoji("📝")
+          .setCustomId("back")
+          .setLabel("Назад на главную")
+          .setStyle(ButtonStyle.Danger)
+          .setEmoji("🔙")
           .setDisabled(false)
       ),
     ],

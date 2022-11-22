@@ -12,6 +12,8 @@ module.exports = async (interaction) => {
   await creationUserInDatabase(interaction.user);
   await interaction.deferReply();
 
+  let user = await User.findOne({ discordId: interaction.user.id });
+
   let allUsers = await User.find();
   let allUsers2 = await User.find();
 
@@ -32,7 +34,9 @@ module.exports = async (interaction) => {
     <style>
       body {
         font-family: "Poppins", Arial, Helvetica, sans-serif;
-        background-color: #161616;
+        background-image: url(${user.userBackground});
+        background-size: cover;
+        background-position: center;
         color: #fff;
         font-size: 12px;
         min-width: 1030px;
@@ -47,7 +51,7 @@ module.exports = async (interaction) => {
       }
       .box {
       	width: 900px;
-		height: 680px;
+		    height: 680px;
         background-color: #435;
         padding: 40px;
         display: flex;
@@ -294,7 +298,7 @@ module.exports = async (interaction) => {
 
   const images = await nodeHtmlToImage({
     html: _htmlTemplate,
-    quality: 200,
+    quality: 100,
     type: "png",
     puppeteerArgs: {
       args: ["--no-sandbox"],
@@ -313,7 +317,7 @@ module.exports = async (interaction) => {
       new ActionRowBuilder().setComponents(
         new ButtonBuilder()
           .setCustomId("back")
-          .setLabel("Назад на главную")
+          .setLabel("Назад к профилю")
           .setStyle(ButtonStyle.Danger)
           .setEmoji("🔙")
           .setDisabled(false)
