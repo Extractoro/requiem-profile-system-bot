@@ -17,6 +17,7 @@ const coupleSchema = new Schema({
   coupleStatus: { type: String, default: "Отсутствует" },
   coupleBalance: { type: Number, default: 0 },
   coupleEquipment: { type: Array, default: [] },
+  coupleConfirm: { type: Boolean, default: false },
 });
 
 module.exports = model("couple", coupleSchema, "couples");

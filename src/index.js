@@ -27,6 +27,8 @@ const userBgEditModal = require("./modals/userBgEditModal.js");
 const modalEditBgReply = require("./modals/replies/modalEditBgReply.js");
 const coupleCreate = require("./events/coupleCreate.js");
 const marriageCreate = require("./events/marriageCreate.js");
+const Couple = require("./db/coupleSchema.js");
+const userSchema = require("./db/userSchema.js");
 
 config();
 
@@ -76,11 +78,11 @@ client.on("interactionCreate", async (interaction) => {
     } else if (interaction.commandName === "rating") {
       await ratingMessage(interaction);
     } else if (interaction.commandName === "couple") {
-      const userSelected = interaction.options.get("user").user;
-      await coupleCreate(interaction, userSelected);
+      const userCoupleSelected = interaction.options.get("user").user;
+      await coupleCreate(interaction, userCoupleSelected);
     } else if (interaction.commandName === "marriage") {
-      const userSelected = interaction.options.get("user").user;
-      await marriageCreate(interaction, userSelected);
+      const userMarriageSelected = interaction.options.get("user").user;
+      await marriageCreate(interaction, userMarriageSelected);
     }
   } else if (interaction.isButton()) {
     if (interaction.customId === "replenish") {
@@ -100,6 +102,53 @@ client.on("interactionCreate", async (interaction) => {
     } else if (interaction.customId === "marriage") {
       await marriageMessage(interaction);
     } else if (interaction.customId === "equipment-marriage") {
+    } else if (interaction.customId === "marriage-yes") {
+      let couple = await Couple.findOne({
+        $and: [
+          { discordSecondId: interaction.user.id },
+          { coupleConfirm: false },
+        ],
+      });
+
+      if (couple !== null && interaction.user.id === couple.discordSecondId) {
+        interaction.reply({
+          content: `У нас тут новый брак! Поздравляем <@${couple.discordFirstId}>, <@${couple.discordSecondId}>!`,
+        });
+
+        const result = await Couple.findByIdAndUpdate(
+          couple?._id,
+          { coupleConfirm: true },
+          {
+            new: true,
+          }
+        );
+        await result.save().catch(console.error);
+      } else {
+        interaction.reply({
+          content: "Ты не можешь решить за другого! :)",
+          ephemeral: true,
+        });
+      }
+    } else if (interaction.customId === "marriage-no") {
+      let couple = await Couple.findOne({
+        $and: [
+          { discordSecondId: interaction.user.id },
+          { coupleConfirm: false },
+        ],
+      });
+
+      if (couple !== null && interaction.user.id === couple.discordSecondId) {
+        interaction.reply({
+          content: `К сожалению, <@${couple.discordSecondId}> отказал(-а) в браке <@${couple.discordFirstId}>. Не расстраивайся, <@${couple.discordFirstId}>.`,
+        });
+
+        await Couple.findByIdAndDelete(couple?._id);
+      } else {
+        interaction.reply({
+          content: "Ты не можешь решить за другого! :)",
+          ephemeral: true,
+        });
+      }
     }
   } else if (interaction.type === InteractionType.ModalSubmit) {
     if (interaction.customId === "userStatusEdit") {
