@@ -81,6 +81,7 @@ module.exports = async (interaction) => {
         height: 280px;
         width: 200px;
         background-color: #435;
+        word-wrap: break-word;
       }
       .h1 {
       	font-size: 25px;

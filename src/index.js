@@ -28,7 +28,6 @@ const modalEditBgReply = require("./modals/replies/modalEditBgReply.js");
 const coupleCreate = require("./events/coupleCreate.js");
 const marriageCreate = require("./events/marriageCreate.js");
 const Couple = require("./db/coupleSchema.js");
-const userSchema = require("./db/userSchema.js");
 
 config();
 
@@ -115,6 +114,14 @@ client.on("interactionCreate", async (interaction) => {
           content: `У нас тут новый брак! Поздравляем <@${couple.discordFirstId}>, <@${couple.discordSecondId}>!`,
         });
 
+        let user1 = await User.findOne({
+          discordId: couple.discordFirstId,
+        });
+
+        let user2 = await User.findOne({
+          discordId: couple.discordSecondId,
+        });
+
         const result = await Couple.findByIdAndUpdate(
           couple?._id,
           { coupleConfirm: true },
@@ -122,7 +129,32 @@ client.on("interactionCreate", async (interaction) => {
             new: true,
           }
         );
+
+        const res1 = await User.findByIdAndUpdate(
+          user1?._id,
+          {
+            userMarriage: "Присутствует",
+            userMarriageWith: `${couple.discordSecondName}#${couple.discordSecondHashtag}`,
+          },
+          {
+            new: true,
+          }
+        );
+
+        const res2 = await User.findByIdAndUpdate(
+          user2?._id,
+          {
+            userMarriage: "Присутствует",
+            userMarriageWith: `${couple.discordFirstName}#${couple.discordFirstHashtag}`,
+          },
+          {
+            new: true,
+          }
+        );
+
         await result.save().catch(console.error);
+        await res1.save().catch(console.error);
+        await res2.save().catch(console.error);
       } else {
         interaction.reply({
           content: "Ты не можешь решить за другого! :)",

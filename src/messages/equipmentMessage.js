@@ -55,6 +55,7 @@ module.exports = async (interaction) => {
         height: 170px;
         width: 200px;
         background-color: #435;
+        word-wrap: break-word;
       }
       .box:last-child {
         margin-bottom: 0;
