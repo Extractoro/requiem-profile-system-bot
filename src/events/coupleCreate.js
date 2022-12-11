@@ -1,5 +1,4 @@
 const User = require("../db/userSchema.js");
-const mongoose = require("mongoose");
 
 module.exports = async (userCaller, userSelected) => {
   let user = await User.findOne({ discordId: userCaller.user.id });
@@ -20,5 +19,7 @@ module.exports = async (userCaller, userSelected) => {
     );
 
     await result.save().catch(console.error);
+
+    await userCaller.reply({ content: "Профиль обновлен!", ephemeral: true });
   }
 };

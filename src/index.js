@@ -28,6 +28,10 @@ const modalEditBgReply = require("./modals/replies/modalEditBgReply.js");
 const coupleCreate = require("./events/coupleCreate.js");
 const marriageCreate = require("./events/marriageCreate.js");
 const Couple = require("./db/coupleSchema.js");
+const marriageEditStatusReply = require("./modals/replies/marriageEditStatusReply.js");
+const marriageEditBgReply = require("./modals/replies/marriageEditBgReply.js");
+const marriageBgEditModal = require("./modals/marriageBgEditModal.js");
+const marriageStatusEditModal = require("./modals/marriageStatusEditModal.js");
 
 config();
 
@@ -87,7 +91,7 @@ client.on("interactionCreate", async (interaction) => {
     if (interaction.customId === "replenish") {
     } else if (interaction.customId === "clan") {
     } else if (interaction.customId === "equipment") {
-      await equipmentMessage(interaction);
+      // await equipmentMessage(interaction);
     } else if (interaction.customId === "couple") {
       await coupleMessage(interaction);
     } else if (interaction.customId === "userEdit") {
@@ -96,6 +100,10 @@ client.on("interactionCreate", async (interaction) => {
       await userBgEditModal(interaction);
     } else if (interaction.customId === "userStatusEdit") {
       await userStatusEditModal(interaction);
+    } else if (interaction.customId === "marriageStatusEdit") {
+      await marriageStatusEditModal(interaction);
+    } else if (interaction.customId === "marriageBgEdit") {
+      await marriageBgEditModal(interaction);
     } else if (interaction.customId === "back") {
       await userMessage(interaction);
     } else if (interaction.customId === "marriage") {
@@ -187,6 +195,10 @@ client.on("interactionCreate", async (interaction) => {
       await modalEditStatusReply(interaction);
     } else if (interaction.customId === "userBgEdit") {
       await modalEditBgReply(interaction);
+    } else if (interaction.customId === "marriageStatusEdit") {
+      await marriageEditStatusReply(interaction);
+    } else if (interaction.customId === "marriageBgEdit") {
+      await marriageEditBgReply(interaction);
     }
   }
 });

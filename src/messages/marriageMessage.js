@@ -5,16 +5,23 @@ const {
   ButtonStyle,
 } = require("discord.js");
 const nodeHtmlToImage = require("node-html-to-image");
-const User = require("../db/userSchema");
 const creationUserInDatabase = require("../events/creationUserInDatabase");
+const Couple = require("../db/coupleSchema");
 
 module.exports = async (interaction) => {
   await creationUserInDatabase(interaction.user);
   await interaction.deferReply();
 
-  let user = await User.findOne({ discordId: interaction.user.id });
+  let couple = await Couple.findOne({
+    $or: [
+      { discordFirstId: interaction.user.id },
+      { discordSecondId: interaction.user.id },
+    ],
+    coupleConfirm: true,
+  });
 
-  const _htmlTemplate = `<!DOCTYPE html>
+  // if (couple !== null) {
+  var _htmlTemplate = `<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -23,11 +30,11 @@ module.exports = async (interaction) => {
     <style>
     	h1, h2 {
     		padding: 0;
-            margin: 0;
+        margin: 0;
     	}
       body {
         font-family: "Poppins", Arial, Helvetica, sans-serif;
-        background-image: url(${user.userBackground});
+        background-image: url(${couple?.coupleBackground});
         background-size: cover;
         background-position: center;
         color: #fff;
@@ -93,28 +100,36 @@ module.exports = async (interaction) => {
     <div class="flex">
         <div class="row">
           <div class="box image">
-            <img class="image" src="https://cdn.discordapp.com/avatars/349599264143441921/293f936109e0a53888d004001dfe769d.jpeg" /> 
+            <img class="image" src=${
+              couple?.discordFirstAvatar !== null
+                ? `https://cdn.discordapp.com/avatars/${couple?.discordFirstId}/${couple?.discordFirstAvatar}.jpeg`
+                : "https://cdn.discordapp.com/embed/avatars/0.png"
+            } /> 
           </div>
           <div class="box image">
-            <img class="image" src="https://cdn.discordapp.com/avatars/349599264143441921/293f936109e0a53888d004001dfe769d.jpeg" /> 
+            <img class="image" src=${
+              couple?.discordSecondAvatar !== null
+                ? `https://cdn.discordapp.com/avatars/${couple?.discordSecondId}/${couple?.discordSecondAvatar}.jpeg`
+                : "https://cdn.discordapp.com/embed/avatars/0.png"
+            } /> 
           </div>
         </div>
         
         <div class="row">
         	<div class="box status">
             	<h1 class="h1 h1-status">Статус пары</h1>
-                <h2 class=""></h2>
+                <h2 class="">${couple?.coupleStatus}</h2>
         	</div>
         </div>
         
         <div class="row">
         	<div class="box input">
             	<h1 class="h1">Инвентарь пары</h1>
-                <h2 class="suptitle">0</h2>
+                <h2 class="suptitle">${couple?.coupleEquipment.length}</h2>
         	</div>
             <div class="box input">
             	<h1 class="h1">Баланс пары</h1>
-                <h2 class="suptitle">0</h2>
+                <h2 class="suptitle">${couple?.coupleBalance}</h2>
         	</div>
         </div>
         
@@ -143,13 +158,13 @@ module.exports = async (interaction) => {
     components: [
       new ActionRowBuilder().setComponents(
         new ButtonBuilder()
-          .setCustomId("bg-marriage")
+          .setCustomId("marriageBgEdit")
           .setLabel("Изменить фон")
           .setStyle(ButtonStyle.Primary)
           .setEmoji("🎨")
           .setDisabled(false),
         new ButtonBuilder()
-          .setCustomId("status-marriage")
+          .setCustomId("marriageStatusEdit")
           .setLabel("Изменить статус")
           .setStyle(ButtonStyle.Primary)
           .setEmoji("🖊️")
@@ -175,4 +190,10 @@ module.exports = async (interaction) => {
       ),
     ],
   });
+  // }
+  //  else {
+  //   await interaction.editReply({
+  //     content: `<@${interaction.user.id}>, У вас нет брака или он не подтвержден`,
+  //   });
+  // }
 };
