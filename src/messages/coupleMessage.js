@@ -14,8 +14,6 @@ module.exports = async (interaction) => {
 
   let user = await User.findOne({ discordId: interaction.user.id });
 
-  console.log(user.userBackground);
-
   const _htmlTemplate = `<!DOCTYPE html>
 <html lang="en">
   <head>

@@ -32,6 +32,8 @@ const marriageEditStatusReply = require("./modals/replies/marriageEditStatusRepl
 const marriageEditBgReply = require("./modals/replies/marriageEditBgReply.js");
 const marriageBgEditModal = require("./modals/marriageBgEditModal.js");
 const marriageStatusEditModal = require("./modals/marriageStatusEditModal.js");
+const divorceCommand = require("./commands/divorceCommand.js");
+const divorceEvent = require("./events/divorceEvent.js");
 
 config();
 
@@ -86,6 +88,8 @@ client.on("interactionCreate", async (interaction) => {
     } else if (interaction.commandName === "marriage") {
       const userMarriageSelected = interaction.options.get("user").user;
       await marriageCreate(interaction, userMarriageSelected);
+    } else if (interaction.commandName === "divorce") {
+      await divorceEvent(interaction);
     }
   } else if (interaction.isButton()) {
     if (interaction.customId === "replenish") {
@@ -189,6 +193,54 @@ client.on("interactionCreate", async (interaction) => {
           ephemeral: true,
         });
       }
+    } else if (interaction.customId === "divorce-yes") {
+      let couple = await Couple.findOne({
+        $or: [
+          { discordFirstId: interaction.user.id },
+          { discordSecondId: interaction.user.id },
+        ],
+      });
+
+      if (
+        couple !== null &&
+        (interaction.user.id === couple.discordSecondId ||
+          interaction.user.id === couple.discordFirstId) &&
+        couple.coupleConfirm === true
+      ) {
+        interaction.reply({
+          content: `К сожалению, один брак потерпел крах. Вы были прекрасной парой: <@${couple.discordFirstId}>, <@${couple.discordSecondId}>!`,
+        });
+      } else {
+        interaction.reply({
+          content: `Ты не можешь решить судьбу других!`,
+          ephemeral: true,
+        });
+      }
+
+      await Couple.findByIdAndDelete(couple?._id);
+    } else if (interaction.customId === "divorce-no") {
+      let couple = await Couple.findOne({
+        $or: [
+          { discordFirstId: interaction.user.id },
+          { discordSecondId: interaction.user.id },
+        ],
+      });
+
+      if (
+        couple !== null &&
+        (interaction.user.id === couple.discordSecondId ||
+          interaction.user.id === couple.discordFirstId) &&
+        couple.coupleConfirm === true
+      ) {
+        interaction.reply({
+          content: `К счастью, мы не увидели как распадается брак. Вы хорошая пара и все у вас будет хорошо: <@${couple.discordFirstId}>, <@${couple.discordSecondId}>!`,
+        });
+      } else {
+        interaction.reply({
+          content: `Ты не можешь решить судьбу других!`,
+          ephemeral: true,
+        });
+      }
     }
   } else if (interaction.type === InteractionType.ModalSubmit) {
     if (interaction.customId === "userStatusEdit") {
@@ -204,7 +256,13 @@ client.on("interactionCreate", async (interaction) => {
 });
 
 async function main() {
-  const commands = [userCommand, ratingCommand, coupleCommand, marriageCommand];
+  const commands = [
+    userCommand,
+    ratingCommand,
+    coupleCommand,
+    marriageCommand,
+    divorceCommand,
+  ];
 
   try {
     console.log("Started refreshing application (/) commands.");

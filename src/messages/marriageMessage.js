@@ -20,8 +20,8 @@ module.exports = async (interaction) => {
     coupleConfirm: true,
   });
 
-  // if (couple !== null) {
-  var _htmlTemplate = `<!DOCTYPE html>
+  if (couple !== null) {
+    var _htmlTemplate = `<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -59,7 +59,7 @@ module.exports = async (interaction) => {
         padding: 10px;
         height: 170px;
         width: 200px;
-        background-color: #435;
+        background-color: ${couple?.coupleBox};
         word-wrap: break-word;
       }
       .box:last-child {
@@ -138,62 +138,61 @@ module.exports = async (interaction) => {
 </html>
 `;
 
-  const images = await nodeHtmlToImage({
-    html: _htmlTemplate,
-    quality: 100,
-    type: "png",
-    puppeteerArgs: {
-      args: ["--no-sandbox"],
-    },
-    encoding: "buffer",
-  });
+    const images = await nodeHtmlToImage({
+      html: _htmlTemplate,
+      quality: 100,
+      type: "png",
+      puppeteerArgs: {
+        args: ["--no-sandbox"],
+      },
+      encoding: "buffer",
+    });
 
-  const attachment = new AttachmentBuilder(
-    images,
-    `${interaction.user.username}.jpeg`
-  );
+    const attachment = new AttachmentBuilder(
+      images,
+      `${interaction.user.username}.jpeg`
+    );
 
-  await interaction.editReply({
-    files: [attachment],
-    components: [
-      new ActionRowBuilder().setComponents(
-        new ButtonBuilder()
-          .setCustomId("marriageBgEdit")
-          .setLabel("Изменить фон")
-          .setStyle(ButtonStyle.Primary)
-          .setEmoji("🎨")
-          .setDisabled(false),
-        new ButtonBuilder()
-          .setCustomId("marriageStatusEdit")
-          .setLabel("Изменить статус")
-          .setStyle(ButtonStyle.Primary)
-          .setEmoji("🖊️")
-          .setDisabled(false),
-        new ButtonBuilder()
-          .setCustomId("equipment-marriage")
-          .setLabel("Пополнить инвентарь")
-          .setStyle(ButtonStyle.Success)
-          .setEmoji("📦")
-          .setDisabled(false),
-        new ButtonBuilder()
-          .setCustomId("balance-marriage")
-          .setLabel("Пополнить баланс")
-          .setStyle(ButtonStyle.Success)
-          .setEmoji("💸")
-          .setDisabled(false),
-        new ButtonBuilder()
-          .setCustomId("back")
-          .setLabel("Назад на главную")
-          .setStyle(ButtonStyle.Danger)
-          .setEmoji("🔙")
-          .setDisabled(false)
-      ),
-    ],
-  });
-  // }
-  //  else {
-  //   await interaction.editReply({
-  //     content: `<@${interaction.user.id}>, У вас нет брака или он не подтвержден`,
-  //   });
-  // }
+    await interaction.editReply({
+      files: [attachment],
+      components: [
+        new ActionRowBuilder().setComponents(
+          new ButtonBuilder()
+            .setCustomId("marriageBgEdit")
+            .setLabel("Изменить фон")
+            .setStyle(ButtonStyle.Primary)
+            .setEmoji("🎨")
+            .setDisabled(false),
+          new ButtonBuilder()
+            .setCustomId("marriageStatusEdit")
+            .setLabel("Изменить статус")
+            .setStyle(ButtonStyle.Primary)
+            .setEmoji("🖊️")
+            .setDisabled(false),
+          new ButtonBuilder()
+            .setCustomId("equipment-marriage")
+            .setLabel("Пополнить инвентарь")
+            .setStyle(ButtonStyle.Success)
+            .setEmoji("📦")
+            .setDisabled(false),
+          new ButtonBuilder()
+            .setCustomId("balance-marriage")
+            .setLabel("Пополнить баланс")
+            .setStyle(ButtonStyle.Success)
+            .setEmoji("💸")
+            .setDisabled(false),
+          new ButtonBuilder()
+            .setCustomId("back")
+            .setLabel("Назад на главную")
+            .setStyle(ButtonStyle.Danger)
+            .setEmoji("🔙")
+            .setDisabled(false)
+        ),
+      ],
+    });
+  } else {
+    await interaction.editReply({
+      content: `<@${interaction.user.id}>, У вас нет брака или он не подтвержден`,
+    });
+  }
 };

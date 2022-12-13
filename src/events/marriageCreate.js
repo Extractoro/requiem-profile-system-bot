@@ -10,6 +10,8 @@ module.exports = async (userCaller, userSelected) => {
     ],
   });
 
+  // Нельзя отправить самому себе
+
   if (user && user.coupleConfirm === true) {
     await userCaller.reply({
       content: "🤗 Дружище, ты уже в браке.",

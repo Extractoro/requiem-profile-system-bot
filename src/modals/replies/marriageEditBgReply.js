@@ -8,10 +8,36 @@ module.exports = async (interaction) => {
     ],
   });
 
+  const getHexadecimalColors = (str) => {
+    const hexColor = /#([a-f0-9]{6}|[a-f0-9]{3})\b/gi;
+    return str.match(hexColor);
+  };
+
+  function colorBox() {
+    if (
+      getHexadecimalColors(
+        interaction?.fields?.getTextInputValue("editBox")
+      ) === null
+    ) {
+      return couple.coupleBox;
+    } else {
+      return interaction?.fields?.getTextInputValue("editBox");
+    }
+  }
+
+  function bg() {
+    if (interaction?.fields?.getTextInputValue("editBg") === "") {
+      return couple.coupleBackground;
+    } else {
+      return interaction?.fields?.getTextInputValue("editBg");
+    }
+  }
+
   const result = await Couple.findByIdAndUpdate(
     couple?._id,
     {
-      coupleBackground: interaction.fields.getTextInputValue("editBg"),
+      coupleBackground: bg(),
+      coupleBox: colorBox(),
     },
     {
       new: true,

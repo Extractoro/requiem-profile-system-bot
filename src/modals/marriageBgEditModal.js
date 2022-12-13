@@ -15,6 +15,14 @@ module.exports = async (interaction) => {
           .setLabel("Ссылка на фон")
           .setCustomId("editBg")
           .setStyle(TextInputStyle.Short)
+          .setRequired(false)
+      ),
+      new ActionRowBuilder().addComponents(
+        new TextInputBuilder()
+          .setLabel("Цвет бокса, hex (Пример: #ffffff)")
+          .setCustomId("editBox")
+          .setStyle(TextInputStyle.Short)
+          .setRequired(false)
       )
     );
 
