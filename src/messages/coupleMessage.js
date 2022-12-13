@@ -14,6 +14,8 @@ module.exports = async (interaction) => {
 
   let user = await User.findOne({ discordId: interaction.user.id });
 
+  console.log(user.userBackground);
+
   const _htmlTemplate = `<!DOCTYPE html>
 <html lang="en">
   <head>
@@ -50,7 +52,7 @@ module.exports = async (interaction) => {
         padding: 10px;
         height: 170px;
         width: 200px;
-        background-color: #435;
+        background-color: ${user.userBox};
         word-wrap: break-word;
       }
       .box:last-child {
@@ -80,7 +82,7 @@ module.exports = async (interaction) => {
         padding: 10px;
         height: 280px;
         width: 200px;
-        background-color: #435;
+        background-color: ${user.userBox};
         word-wrap: break-word;
       }
       .h1 {

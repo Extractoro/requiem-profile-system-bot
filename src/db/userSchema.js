@@ -10,6 +10,7 @@ const userSchema = new Schema({
     type: String,
     default: "https://www.colorhexa.com/161616.png",
   },
+  userBox: { type: String, default: "#435" },
   userStatus: { type: String, default: "Отсутствует" },
   userMarriage: { type: String, default: "Отсутствует" },
   userMarriageWith: { type: String, default: "Отсутствует" },

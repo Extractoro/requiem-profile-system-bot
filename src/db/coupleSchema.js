@@ -14,6 +14,10 @@ const coupleSchema = new Schema({
     type: String,
     default: "https://www.colorhexa.com/161616.png",
   },
+  coupleBox: {
+    type: String,
+    default: "#435",
+  },
   coupleStatus: { type: String, default: "Отсутствует" },
   coupleBalance: { type: Number, default: 0 },
   coupleEquipment: { type: Array, default: [] },

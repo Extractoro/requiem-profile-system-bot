@@ -46,7 +46,7 @@ module.exports = async (interaction) => {
     <style>
       body {
         font-family: "Poppins", Arial, Helvetica, sans-serif;
-        background-color: #161616;
+        background-image: url(${user.userBackground});
         color: #fff;
         font-size: 9px;
         min-width: 900px;
@@ -70,7 +70,7 @@ module.exports = async (interaction) => {
         padding: 10px;
         height: 170px;
         width: 200px;
-        background-color: #435;
+        background-color: ${user.userBox};
       }
       .box:last-child {
         margin-bottom: 0;

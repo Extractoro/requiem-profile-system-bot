@@ -54,7 +54,7 @@ module.exports = async (interaction) => {
         padding: 10px;
         height: 170px;
         width: 200px;
-        background-color: #435;
+        background-color: ${user.userBox};
         word-wrap: break-word;
       }
       .box:last-child {

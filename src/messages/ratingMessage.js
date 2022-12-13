@@ -52,7 +52,7 @@ module.exports = async (interaction) => {
       .box {
       	width: 900px;
 		    height: 680px;
-        background-color: #435;
+        background-color: ${user.userBox};
         padding: 40px;
         display: flex;
         justify-content: space-around;
