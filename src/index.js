@@ -34,6 +34,7 @@ const marriageBgEditModal = require("./modals/marriageBgEditModal.js");
 const marriageStatusEditModal = require("./modals/marriageStatusEditModal.js");
 const divorceCommand = require("./commands/divorceCommand.js");
 const divorceEvent = require("./events/divorceEvent.js");
+const clanCreationCommand = require("./commands/clanCreationCommand.js");
 
 config();
 
@@ -90,6 +91,8 @@ client.on("interactionCreate", async (interaction) => {
       await marriageCreate(interaction, userMarriageSelected);
     } else if (interaction.commandName === "divorce") {
       await divorceEvent(interaction);
+    } else if (interaction.commandName === "clanCreate") {
+      await ratingMessage(interaction);
     }
   } else if (interaction.isButton()) {
     if (interaction.customId === "replenish") {
@@ -262,6 +265,7 @@ async function main() {
     coupleCommand,
     marriageCommand,
     divorceCommand,
+    clanCreationCommand,
   ];
 
   try {
