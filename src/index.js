@@ -35,6 +35,7 @@ const marriageStatusEditModal = require("./modals/marriageStatusEditModal.js");
 const divorceCommand = require("./commands/divorceCommand.js");
 const divorceEvent = require("./events/divorceEvent.js");
 const clanCreationCommand = require("./commands/clanCreationCommand.js");
+const clanCreationEvent = require("./events/clanCreationEvent.js");
 
 config();
 
@@ -91,8 +92,9 @@ client.on("interactionCreate", async (interaction) => {
       await marriageCreate(interaction, userMarriageSelected);
     } else if (interaction.commandName === "divorce") {
       await divorceEvent(interaction);
-    } else if (interaction.commandName === "clanCreate") {
-      await ratingMessage(interaction);
+    } else if (interaction.commandName === "create-clan") {
+      const clanName = interaction.options.get("name").value;
+      await clanCreationEvent(interaction, clanName);
     }
   } else if (interaction.isButton()) {
     if (interaction.customId === "replenish") {
