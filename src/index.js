@@ -9,16 +9,16 @@ const {
 } = require("discord.js");
 
 const User = require("./db/userSchema.js");
-const userCommand = require("./commands/userCommand.js");
-const coupleCommand = require("./commands/coupleCommand.js");
-const marriageCommand = require("./commands/marriageCommand.js");
+const userCommand = require("./commands/user.js");
+const coupleCommand = require("./commands/couple.js");
+const marriageCommand = require("./commands/marriage.js");
 const creationUserInDatabase = require("./events/creationUserInDatabase.js");
 const userMessage = require("./messages/userMessage.js");
 const ratingMessage = require("./messages/ratingMessage.js");
 const voiceClient = require("./client/VoiceClient.js");
 const coupleMessage = require("./messages/coupleMessage.js");
 const marriageMessage = require("./messages/marriageMessage.js");
-const ratingCommand = require("./commands/ratingCommand.js");
+const ratingCommand = require("./commands/rating.js");
 const equipmentMessage = require("./messages/equipmentMessage.js");
 const userEditMessage = require("./messages/userEditMessage.js");
 const userStatusEditModal = require("./modals/userStatusEditModal.js");
@@ -32,10 +32,12 @@ const marriageEditStatusReply = require("./modals/replies/marriageEditStatusRepl
 const marriageEditBgReply = require("./modals/replies/marriageEditBgReply.js");
 const marriageBgEditModal = require("./modals/marriageBgEditModal.js");
 const marriageStatusEditModal = require("./modals/marriageStatusEditModal.js");
-const divorceCommand = require("./commands/divorceCommand.js");
+const divorceCommand = require("./commands/divorce.js");
 const divorceEvent = require("./events/divorceEvent.js");
-const clanCreationCommand = require("./commands/clanCreationCommand.js");
+const clanCreationCommand = require("./commands/clan/clanCreation.js");
 const clanCreationEvent = require("./events/clanCreationEvent.js");
+const clanJoinEvent = require("./events/clanJoinEvent.js");
+const clanJoin = require("./commands/clan/clanJoin.js");
 
 config();
 
@@ -95,6 +97,9 @@ client.on("interactionCreate", async (interaction) => {
     } else if (interaction.commandName === "create-clan") {
       const clanName = interaction.options.get("name").value;
       await clanCreationEvent(interaction, clanName);
+    } else if (interaction.commandName === "join-clan") {
+      const clanName = interaction.options.get("name").value;
+      await clanJoinEvent(interaction, clanName);
     }
   } else if (interaction.isButton()) {
     if (interaction.customId === "replenish") {
@@ -268,6 +273,7 @@ async function main() {
     marriageCommand,
     divorceCommand,
     clanCreationCommand,
+    clanJoin,
   ];
 
   try {
