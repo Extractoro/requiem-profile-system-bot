@@ -6,6 +6,10 @@ const {
   REST,
   Routes,
   InteractionType,
+  ModalBuilder,
+  ActionRowBuilder,
+  TextInputBuilder,
+  TextInputStyle,
 } = require("discord.js");
 
 const User = require("./db/userSchema.js");
@@ -38,6 +42,27 @@ const clanCreationCommand = require("./commands/clan/clanCreation.js");
 const clanCreationEvent = require("./events/clanCreationEvent.js");
 const clanJoinEvent = require("./events/clanJoinEvent.js");
 const clanJoin = require("./commands/clan/clanJoin.js");
+const clanEdit = require("./commands/clan/clanEdit.js");
+const editNameEvent = require("./modals/clan/event/editNameEvent");
+const editTagEvent = require("./modals/clan/event/editTagEvent");
+const editStatusEvent = require("./modals/clan/event/editStatusEvent");
+const editAvatarEvent = require("./modals/clan/event/editAvatarEvent");
+const editBgEvent = require("./modals/clan/event/editBgEvent");
+const editBoxEvent = require("./modals/clan/event/editBoxEvent");
+const editLeaderEvent = require("./modals/clan/event/editLeaderEvent");
+const editHelperEvent = require("./modals/clan/event/editHelperEvent");
+const editPrivacyEvent = require("./modals/clan/event/editPrivacyEvent");
+const editLimitEvent = require("./modals/clan/event/editLimitEvent");
+const editName = require("./modals/clan/editName");
+const editTag = require("./modals/clan/editTag");
+const editStatus = require("./modals/clan/editStatus");
+const editAvatar = require("./modals/clan/editAvatar");
+const editBg = require("./modals/clan/editBg");
+const editBox = require("./modals/clan/editBox");
+const editLeader = require("./modals/clan/editLeader");
+const editHelper = require("./modals/clan/editHelper");
+const editPrivacy = require("./modals/clan/editPrivacy");
+const editLimit = require("./modals/clan/editLimit");
 
 config();
 
@@ -100,6 +125,29 @@ client.on("interactionCreate", async (interaction) => {
     } else if (interaction.commandName === "join-clan") {
       const clanName = interaction.options.get("name").value;
       await clanJoinEvent(interaction, clanName);
+    } else if (interaction.commandName === "edit-clan") {
+      const clanOption = interaction.options.get("option").value;
+      if (clanOption === "name") {
+        await editName(interaction);
+      } else if (clanOption === "tag") {
+        await editTag(interaction);
+      } else if (clanOption === "status") {
+        await editStatus(interaction);
+      } else if (clanOption === "avatar") {
+        await editAvatar(interaction);
+      } else if (clanOption === "background") {
+        await editBg(interaction);
+      } else if (clanOption === "box") {
+        await editBox(interaction);
+      } else if (clanOption === "leader") {
+        await editLeader(interaction);
+      } else if (clanOption === "helper") {
+        await editHelper(interaction);
+      } else if (clanOption === "privacy") {
+        await editPrivacy(interaction);
+      } else if (clanOption === "limit") {
+        await editLimit(interaction);
+      }
     }
   } else if (interaction.isButton()) {
     if (interaction.customId === "replenish") {
@@ -261,6 +309,26 @@ client.on("interactionCreate", async (interaction) => {
       await marriageEditStatusReply(interaction);
     } else if (interaction.customId === "marriageBgEdit") {
       await marriageEditBgReply(interaction);
+    } else if (interaction.customId === "name-modal") {
+      await editNameEvent(interaction);
+    } else if (interaction.customId === "tag-modal") {
+      await editTagEvent(interaction);
+    } else if (interaction.customId === "status-modal") {
+      await editStatusEvent(interaction);
+    } else if (interaction.customId === "avatar-modal") {
+      await editAvatarEvent(interaction);
+    } else if (interaction.customId === "background-modal") {
+      await editBgEvent(interaction);
+    } else if (interaction.customId === "box-modal") {
+      await editBoxEvent(interaction);
+    } else if (interaction.customId === "leader-modal") {
+      await editLeaderEvent(interaction);
+    } else if (interaction.customId === "helper-modal") {
+      await editHelperEvent(interaction);
+    } else if (interaction.customId === "privacy-modal") {
+      await editPrivacyEvent(interaction);
+    } else if (interaction.customId === "limit-modal") {
+      await editLimitEvent(interaction);
     }
   }
 });
@@ -274,6 +342,7 @@ async function main() {
     divorceCommand,
     clanCreationCommand,
     clanJoin,
+    clanEdit,
   ];
 
   try {

@@ -8,13 +8,17 @@ const clanSchema = new Schema({
   clanOwnerId: { type: String },
   clanHelper: { type: String, default: "Отсутствует" },
   clanMembers: { type: Array, default: [] },
-  clanMaxMembers: { type: Number, default: 50 },
+  clanLimit: { type: Number, default: 50 },
   clanExp: { type: Number, default: 0 },
   clanPrivacy: { type: String, default: "open" },
   clanMemberRole: { type: String, default: "Отсутствует" },
   clanRequests: { type: Array, default: [] },
   clanBans: { type: Array, default: [] },
   clanBackground: {
+    type: String,
+    default: "https://www.colorhexa.com/161616.png",
+  },
+  clanAvatar: {
     type: String,
     default: "https://www.colorhexa.com/161616.png",
   },
