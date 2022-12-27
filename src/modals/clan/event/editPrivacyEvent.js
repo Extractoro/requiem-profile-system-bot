@@ -1,51 +1,45 @@
 const Clan = require("../../../db/clanSchema");
-const mongoose = require("mongoose");
-const User = require("../../../db/userSchema.js");
 
-module.exports = async (interaction, clanName) => {
-  let clan = await Clan.findOne({ clanOwnerId: interaction.user.id });
-
-  let user = await User.findOne({
-    $and: [{ userClan: "Отсутствует" }, { discordId: interaction.user.id }],
+module.exports = async (interaction) => {
+  let clan = await Clan.findOne({
+    $or: [
+      { clanOwnerId: interaction.user.id },
+      { clanHelperId: interaction.user.id },
+    ],
   });
 
-  if (!user || clan) {
+  function privacyCheck() {
+    if (
+      interaction?.fields?.getTextInputValue("editPrivacy") === "open" ||
+      interaction?.fields?.getTextInputValue("editPrivacy") === "close" ||
+      interaction?.fields?.getTextInputValue("editPrivacy") === "request"
+    ) {
+      return interaction?.fields?.getTextInputValue("editPrivacy");
+    } else {
+      return clan.clanPrivacy;
+    }
+  }
+
+  if (!clan) {
     await interaction.reply({
-      content: "У тебя уже есть свой клан.",
+      content: "Вы не состоите в клане или у вас нет прав на редактирование.",
       ephemeral: true,
     });
   }
 
-  if (!clan && user) {
-    clan = await new Clan({
-      _id: mongoose.Types.ObjectId(),
-      clanName,
-      clanOwner: `${interaction.user.username}#${interaction.user.discriminator}`,
-      clanOwnerId: interaction.user.id,
-      clanMembers: [
-        {
-          memberId: interaction.user.id,
-          memberName: interaction.user.username,
-          memberDiscriminator: interaction.user.discriminator,
-          memberExp: 0,
-          memberRole: "owner",
-        },
-      ],
-    });
-
-    const result = await User.findByIdAndUpdate(
-      user?._id,
-      { userClan: clanName },
+  if (clan) {
+    const result = await Clan.findByIdAndUpdate(
+      clan?._id,
+      { clanPrivacy: privacyCheck() },
       {
         new: true,
       }
     );
 
-    await clan.save().catch(console.error);
     await result.save().catch(console.error);
 
     await interaction.reply({
-      content: "Клан успешно создан!",
+      content: "Ваша приватность клана изменена!",
       ephemeral: true,
     });
   }

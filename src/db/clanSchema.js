@@ -7,6 +7,7 @@ const clanSchema = new Schema({
   clanOwner: { type: String },
   clanOwnerId: { type: String },
   clanHelper: { type: String, default: "Отсутствует" },
+  clanHelperId: { type: String, default: "Отсутствует" },
   clanMembers: { type: Array, default: [] },
   clanLimit: { type: Number, default: 50 },
   clanExp: { type: Number, default: 0 },

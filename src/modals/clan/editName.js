@@ -16,6 +16,7 @@ module.exports = async (interaction) => {
           .setCustomId("editName")
           .setStyle(TextInputStyle.Short)
           .setRequired(false)
+          .setMinLength(5)
       )
     );
 
