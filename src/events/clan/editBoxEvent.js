@@ -1,6 +1,6 @@
-const Clan = require("../../../db/clanSchema");
+const Clan = require("../../db/clanSchema");
 
-module.exports = async (interaction) => {
+module.exports = async (interaction, clanValue) => {
   let clan = await Clan.findOne({
     $or: [
       { clanOwnerId: interaction.user.id },
@@ -8,15 +8,16 @@ module.exports = async (interaction) => {
     ],
   });
 
-  function privacyCheck() {
-    if (
-      interaction?.fields?.getTextInputValue("editPrivacy") === "open" ||
-      interaction?.fields?.getTextInputValue("editPrivacy") === "close" ||
-      interaction?.fields?.getTextInputValue("editPrivacy") === "request"
-    ) {
-      return interaction?.fields?.getTextInputValue("editPrivacy");
+  const getHexadecimalColors = (str) => {
+    const hexColor = /#([a-f0-9]{6}|[a-f0-9]{3})\b/gi;
+    return str.match(hexColor);
+  };
+
+  function colorBox() {
+    if (getHexadecimalColors(clanValue) === null) {
+      return clan.clanBox;
     } else {
-      return clan.clanPrivacy;
+      return clanValue;
     }
   }
 
@@ -30,7 +31,7 @@ module.exports = async (interaction) => {
   if (clan) {
     const result = await Clan.findByIdAndUpdate(
       clan?._id,
-      { clanPrivacy: privacyCheck() },
+      { clanBox: colorBox() },
       {
         new: true,
       }
@@ -39,7 +40,7 @@ module.exports = async (interaction) => {
     await result.save().catch(console.error);
 
     await interaction.reply({
-      content: "Ваша приватность клана изменена!",
+      content: "Ваш цвет бокса клана изменен!",
       ephemeral: true,
     });
   }

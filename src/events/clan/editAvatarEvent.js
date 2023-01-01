@@ -1,6 +1,6 @@
-const Clan = require("../../../db/clanSchema");
+const Clan = require("../../db/clanSchema");
 
-module.exports = async (interaction) => {
+module.exports = async (interaction, clanUrl) => {
   let clan = await Clan.findOne({
     $or: [
       { clanOwnerId: interaction.user.id },
@@ -18,7 +18,7 @@ module.exports = async (interaction) => {
   if (clan) {
     const result = await Clan.findByIdAndUpdate(
       clan?._id,
-      { clanAvatar: interaction.fields.getTextInputValue("editBackground") },
+      { clanAvatar: clanUrl },
       {
         new: true,
       }
@@ -27,7 +27,7 @@ module.exports = async (interaction) => {
     await result.save().catch(console.error);
 
     await interaction.reply({
-      content: "Ваш фон клана изменен!",
+      content: "Ваш аватар клана изменено!",
       ephemeral: true,
     });
   }

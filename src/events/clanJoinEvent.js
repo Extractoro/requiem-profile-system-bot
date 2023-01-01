@@ -9,12 +9,14 @@ module.exports = async (interaction, clanName) => {
 
   let clan = await Clan.findOne({ clanName });
 
+  // если лимит <, то нельзя зайти
+  // тип приватности
+
   const member = {
     memberId: interaction.user.id,
     memberName: interaction.user.username,
     memberDiscriminator: interaction.user.discriminator,
     memberExp: 0,
-    memberRole: "member",
   };
 
   if (!clan) {

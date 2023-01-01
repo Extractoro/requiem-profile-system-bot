@@ -28,7 +28,6 @@ module.exports = async (interaction, clanName) => {
           memberName: interaction.user.username,
           memberDiscriminator: interaction.user.discriminator,
           memberExp: 0,
-          memberRole: "owner",
         },
       ],
     });

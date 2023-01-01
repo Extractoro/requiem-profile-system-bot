@@ -1,29 +1,12 @@
-const Clan = require("../../../db/clanSchema");
+const Clan = require("../../db/clanSchema");
 
-module.exports = async (interaction) => {
+module.exports = async (interaction, clanValue) => {
   let clan = await Clan.findOne({
     $or: [
       { clanOwnerId: interaction.user.id },
       { clanHelperId: interaction.user.id },
     ],
   });
-
-  const getHexadecimalColors = (str) => {
-    const hexColor = /#([a-f0-9]{6}|[a-f0-9]{3})\b/gi;
-    return str.match(hexColor);
-  };
-
-  function colorBox() {
-    if (
-      getHexadecimalColors(
-        interaction?.fields?.getTextInputValue("editBox")
-      ) === null
-    ) {
-      return clan.clanBox;
-    } else {
-      return interaction?.fields?.getTextInputValue("editBox");
-    }
-  }
 
   if (!clan) {
     await interaction.reply({
@@ -35,7 +18,7 @@ module.exports = async (interaction) => {
   if (clan) {
     const result = await Clan.findByIdAndUpdate(
       clan?._id,
-      { clanBox: colorBox() },
+      { clanStatus: clanValue },
       {
         new: true,
       }
@@ -44,7 +27,7 @@ module.exports = async (interaction) => {
     await result.save().catch(console.error);
 
     await interaction.reply({
-      content: "Ваш цвет бокса клана изменен!",
+      content: "Ваш статус клана изменено!",
       ephemeral: true,
     });
   }
