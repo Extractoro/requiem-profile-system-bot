@@ -53,6 +53,8 @@ const editLeaderEvent = require("./events/clan/editLeaderEvent");
 const editHelperEvent = require("./events/clan/editHelperEvent");
 const editPrivacyEvent = require("./events/clan/editPrivacyEvent");
 const editLimitEvent = require("./events/clan/editLimitEvent");
+const clanLeave = require("./commands/clan/clanLeave.js");
+const clanLeaveEvent = require("./events/clanLeaveEvent.js");
 
 config();
 
@@ -115,6 +117,8 @@ client.on("interactionCreate", async (interaction) => {
     } else if (interaction.commandName === "join-clan") {
       const clanName = interaction.options.get("name").value;
       await clanJoinEvent(interaction, clanName);
+    } else if (interaction.commandName === "leave-clan") {
+      await clanLeaveEvent(interaction);
     } else if (interaction.commandName === "edit-clan") {
       const clanOption = interaction.options._subcommand;
       const clanValue = interaction.options.get(clanOption).value;
@@ -314,6 +318,7 @@ async function main() {
     divorceCommand,
     clanCreationCommand,
     clanJoin,
+    clanLeave,
     clanEdit,
   ];
 

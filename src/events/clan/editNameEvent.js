@@ -13,21 +13,6 @@ module.exports = async (interaction, clanValue) => {
     userClan: clan.clanName,
   });
 
-  for (let i = 0; i < users.length; i++) {
-    const el = users[i];
-    var ele = users[i].userClan;
-
-    const res = await User.findByIdAndUpdate(
-      el?._id,
-      { ele: clanValue },
-      {
-        new: true,
-      }
-    );
-
-    await res.save().catch(console.error);
-  }
-
   // смена клана у всех при изменении
 
   // console.log(clan.clanName);
