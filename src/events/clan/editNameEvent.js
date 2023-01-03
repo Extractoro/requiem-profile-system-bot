@@ -13,15 +13,6 @@ module.exports = async (interaction, clanValue) => {
     userClan: clan.clanName,
   });
 
-  // смена клана у всех при изменении
-
-  // console.log(clan.clanName);
-  // console.log(
-  //   JSON.parse(
-  //     JSON.stringify(users).replaceAll(`${clan.clanName}`, `${clan.clanName}`)
-  //   )
-  // );
-
   if (!clan) {
     await interaction.reply({
       content: "Вы не состоите в клане или у вас нет прав на редактирование.",
@@ -38,15 +29,17 @@ module.exports = async (interaction, clanValue) => {
       }
     );
 
-    // const res = await User.findByIdAndUpdate(
-    //   user?._id,
-    //   { userClan: clanValue },
-    //   {
-    //     new: true,
-    //   }
-    // );
+    for (let user of users) {
+      const res = await User.findByIdAndUpdate(
+        user?._id,
+        { userClan: clanValue },
+        {
+          new: true,
+        }
+      );
 
-    // await res.save().catch(console.error);
+      await res.save().catch(console.error);
+    }
     await result.save().catch(console.error);
 
     await interaction.reply({

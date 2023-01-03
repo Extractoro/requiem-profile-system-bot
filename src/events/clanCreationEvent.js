@@ -4,7 +4,7 @@ const User = require("../db/userSchema.js");
 
 module.exports = async (interaction, clanName) => {
   let clan = await Clan.findOne({ clanOwnerId: interaction.user.id });
-
+  let clanCheck = await Clan.findOne({ clanName });
   let user = await User.findOne({
     $and: [{ userClan: "Отсутствует" }, { discordId: interaction.user.id }],
   });
@@ -16,7 +16,14 @@ module.exports = async (interaction, clanName) => {
     });
   }
 
-  if (!clan && user) {
+  if (clanCheck) {
+    await interaction.reply({
+      content: "Такое название клана уже существует.",
+      ephemeral: true,
+    });
+  }
+
+  if (!clan && user && !clanCheck) {
     clan = await new Clan({
       _id: mongoose.Types.ObjectId(),
       clanName,
