@@ -6,10 +6,6 @@ const {
   REST,
   Routes,
   InteractionType,
-  ModalBuilder,
-  ActionRowBuilder,
-  TextInputBuilder,
-  TextInputStyle,
 } = require("discord.js");
 
 const User = require("./db/userSchema.js");
@@ -57,6 +53,8 @@ const clanLeave = require("./commands/clan/clanLeave.js");
 const clanLeaveEvent = require("./events/clanLeaveEvent.js");
 const clanDelete = require("./commands/clan/clanDelete.js");
 const clanDeleteEvent = require("./events/clanDeleteEvent.js");
+const clanRequests = require("./commands/clan/clanRequests.js");
+const clanRequestsEvent = require("./events/clanRequestsEvent.js");
 
 config();
 
@@ -148,6 +146,8 @@ client.on("interactionCreate", async (interaction) => {
       } else if (clanOption === "box") {
         await editBoxEvent(interaction, clanValue);
       }
+    } else if (interaction.commandName === "requests") {
+      await clanRequestsEvent(interaction);
     }
   } else if (interaction.isButton()) {
     if (interaction.customId === "replenish") {
@@ -325,6 +325,7 @@ async function main() {
     clanLeave,
     clanEdit,
     clanDelete,
+    clanRequests,
   ];
 
   try {

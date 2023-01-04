@@ -33,7 +33,44 @@ module.exports = async (interaction, clanName) => {
     });
   }
 
-  if (user && clan) {
+  if (
+    user &&
+    clan &&
+    clan.clanPrivacy === "open" &&
+    clan.clanMembers.length < clan.clanLimit
+  ) {
+    const result = await User.findByIdAndUpdate(
+      user?._id,
+      { userClan: clanName },
+      {
+        new: true,
+      }
+    );
+
+    const res = await Clan.findByIdAndUpdate(clan?._id, {
+      clanMembers: [...clan.clanMembers, member],
+    });
+
+    await result.save().catch(console.error);
+    await res.save().catch(console.error);
+
+    await interaction.reply({
+      content: `Вы присоединились к клану ${clanName}.`,
+      ephemeral: true,
+    });
+  } else {
+    await interaction.reply({
+      content: ``,
+      ephemeral: true,
+    });
+  }
+
+  if (
+    user &&
+    clan &&
+    clan.clanPrivacy === "request" &&
+    clan.clanMembers.length < clan.clanLimit
+  ) {
     const result = await User.findByIdAndUpdate(
       user?._id,
       { userClan: clanName },
