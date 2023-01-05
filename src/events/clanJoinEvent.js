@@ -19,6 +19,12 @@ module.exports = async (interaction, clanName) => {
     memberExp: 0,
   };
 
+  const memberRequest = {
+    memberId: interaction.user.id,
+    memberName: interaction.user.username,
+    memberDiscriminator: interaction.user.discriminator,
+  };
+
   if (!clan) {
     await interaction.reply({
       content: "Такого названия клана нет.",
@@ -51,18 +57,13 @@ module.exports = async (interaction, clanName) => {
       clanMembers: [...clan.clanMembers, member],
     });
 
-    await result.save().catch(console.error);
-    await res.save().catch(console.error);
-
     await interaction.reply({
       content: `Вы присоединились к клану ${clanName}.`,
       ephemeral: true,
     });
-  } else {
-    await interaction.reply({
-      content: ``,
-      ephemeral: true,
-    });
+
+    await result.save().catch(console.error);
+    await res.save().catch(console.error);
   }
 
   if (
@@ -71,23 +72,29 @@ module.exports = async (interaction, clanName) => {
     clan.clanPrivacy === "request" &&
     clan.clanMembers.length < clan.clanLimit
   ) {
-    const result = await User.findByIdAndUpdate(
-      user?._id,
-      { userClan: clanName },
-      {
-        new: true,
+    for (let user of clan.clanRequests) {
+      if (user.memberId === interaction.user.id) {
+        await interaction.channel.send(
+          `<@${interaction.user.id}>, Вы уже отправили запрос в этот клан.`
+        );
+      } else {
+        const res = await Clan.findByIdAndUpdate(clan?._id, {
+          clanRequests: [...clan.clanRequests, memberRequest],
+        });
+
+        await res.save().catch(console.error);
+
+        await interaction.reply({
+          content: `Вы отправили заявку на вступление. Дождитесь, пока вас примут.`,
+          ephemeral: true,
+        });
       }
-    );
+    }
+  }
 
-    const res = await Clan.findByIdAndUpdate(clan?._id, {
-      clanMembers: [...clan.clanMembers, member],
-    });
-
-    await result.save().catch(console.error);
-    await res.save().catch(console.error);
-
+  if (user && clan && clan.clanPrivacy === "close") {
     await interaction.reply({
-      content: `Вы присоединились к клану ${clanName}.`,
+      content: "Этот клан закрыл для новых игроков.",
       ephemeral: true,
     });
   }
