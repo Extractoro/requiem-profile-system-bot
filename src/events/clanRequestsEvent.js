@@ -22,5 +22,15 @@ module.exports = async (interaction) => {
         ephemeral: true,
       });
     }
+
+    if (clan.clanRequests.length !== 0) {
+      await interaction.reply({
+        content: `Запросы на вступление клана __**${clan.clanName}**__.
+        ${clan.clanRequests.map(
+          (user) =>
+            `\n${user.memberName}#${user.memberDiscriminator} (${user.memberId})`
+        )}`,
+      });
+    }
   }
 };

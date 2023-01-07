@@ -55,6 +55,7 @@ const clanDelete = require("./commands/clan/clanDelete.js");
 const clanDeleteEvent = require("./events/clanDeleteEvent.js");
 const clanRequests = require("./commands/clan/clanRequests.js");
 const clanRequestsEvent = require("./events/clanRequestsEvent.js");
+const clanInvite = require("./commands/clan/clanInvite.js");
 
 config();
 
@@ -147,6 +148,10 @@ client.on("interactionCreate", async (interaction) => {
         await editBoxEvent(interaction, clanValue);
       }
     } else if (interaction.commandName === "requests") {
+      await clanRequestsEvent(interaction);
+    } else if (interaction.commandName === "invite") {
+      const clanValue = interaction.options.get("user").value;
+      console.log(clanValue);
       await clanRequestsEvent(interaction);
     }
   } else if (interaction.isButton()) {
@@ -326,6 +331,7 @@ async function main() {
     clanEdit,
     clanDelete,
     clanRequests,
+    clanInvite,
   ];
 
   try {
