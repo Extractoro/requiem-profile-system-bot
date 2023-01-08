@@ -13,6 +13,7 @@ const clanSchema = new Schema({
   clanExp: { type: Number, default: 0 },
   clanPrivacy: { type: String, default: "open" },
   clanMemberRole: { type: String, default: "Отсутствует" },
+  clanInvitation: { type: Array, default: [] },
   clanRequests: { type: Array, default: [] },
   clanBans: { type: Array, default: [] },
   clanBackground: {

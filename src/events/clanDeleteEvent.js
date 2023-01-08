@@ -7,7 +7,7 @@ module.exports = async (interaction) => {
   });
 
   if (!clan) {
-    await interaction.reply({
+    return await interaction.reply({
       content: "Вы не состоите в клане или у вас нет прав на редактирование.",
       ephemeral: true,
     });
@@ -32,7 +32,7 @@ module.exports = async (interaction) => {
 
     await Clan.findByIdAndDelete(clan?._id);
 
-    await interaction.reply({
+    return await interaction.reply({
       content: "Ваш клан был удален!",
       ephemeral: true,
     });

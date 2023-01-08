@@ -56,6 +56,10 @@ const clanDeleteEvent = require("./events/clanDeleteEvent.js");
 const clanRequests = require("./commands/clan/clanRequests.js");
 const clanRequestsEvent = require("./events/clanRequestsEvent.js");
 const clanInvite = require("./commands/clan/clanInvite.js");
+const clanAccept = require("./commands/clan/clanAccept.js");
+const clanDecline = require("./commands/clan/clanDecline.js");
+const clanAcceptEvent = require("./events/clanAcceptEvent.js");
+const clanDeclineEvent = require("./events/clanDeclineEvent.js");
 
 config();
 
@@ -151,8 +155,13 @@ client.on("interactionCreate", async (interaction) => {
       await clanRequestsEvent(interaction);
     } else if (interaction.commandName === "invite") {
       const clanValue = interaction.options.get("user").value;
-      console.log(clanValue);
       await clanRequestsEvent(interaction);
+    } else if (interaction.commandName === "accept") {
+      const userValue = interaction.options.get("user").value;
+      await clanAcceptEvent(interaction, userValue);
+    } else if (interaction.commandName === "decline") {
+      const userValue = interaction.options.get("user").value;
+      await clanDeclineEvent(interaction, userValue);
     }
   } else if (interaction.isButton()) {
     if (interaction.customId === "replenish") {
@@ -185,10 +194,6 @@ client.on("interactionCreate", async (interaction) => {
       });
 
       if (couple !== null && interaction.user.id === couple.discordSecondId) {
-        interaction.reply({
-          content: `У нас тут новый брак! Поздравляем <@${couple.discordFirstId}>, <@${couple.discordSecondId}>!`,
-        });
-
         let user1 = await User.findOne({
           discordId: couple.discordFirstId,
         });
@@ -230,8 +235,12 @@ client.on("interactionCreate", async (interaction) => {
         await result.save().catch(console.error);
         await res1.save().catch(console.error);
         await res2.save().catch(console.error);
+
+        return await interaction.reply({
+          content: `У нас тут новый брак! Поздравляем <@${couple.discordFirstId}>, <@${couple.discordSecondId}>!`,
+        });
       } else {
-        interaction.reply({
+        return await interaction.reply({
           content: "Ты не можешь решить за другого! :)",
           ephemeral: true,
         });
@@ -245,13 +254,13 @@ client.on("interactionCreate", async (interaction) => {
       });
 
       if (couple !== null && interaction.user.id === couple.discordSecondId) {
-        interaction.reply({
+        await Couple.findByIdAndDelete(couple?._id);
+
+        return await interaction.reply({
           content: `К сожалению, <@${couple.discordSecondId}> отказал(-а) в браке <@${couple.discordFirstId}>. Не расстраивайся, <@${couple.discordFirstId}>.`,
         });
-
-        await Couple.findByIdAndDelete(couple?._id);
       } else {
-        interaction.reply({
+        return await interaction.reply({
           content: "Ты не можешь решить за другого! :)",
           ephemeral: true,
         });
@@ -270,11 +279,11 @@ client.on("interactionCreate", async (interaction) => {
           interaction.user.id === couple.discordFirstId) &&
         couple.coupleConfirm === true
       ) {
-        interaction.reply({
+        return await interaction.reply({
           content: `К сожалению, один брак потерпел крах. Вы были прекрасной парой: <@${couple.discordFirstId}>, <@${couple.discordSecondId}>!`,
         });
       } else {
-        interaction.reply({
+        return await interaction.reply({
           content: `Ты не можешь решить судьбу других!`,
           ephemeral: true,
         });
@@ -295,11 +304,11 @@ client.on("interactionCreate", async (interaction) => {
           interaction.user.id === couple.discordFirstId) &&
         couple.coupleConfirm === true
       ) {
-        interaction.reply({
+        return await interaction.reply({
           content: `К счастью, мы не увидели как распадается брак. Вы хорошая пара и все у вас будет хорошо: <@${couple.discordFirstId}>, <@${couple.discordSecondId}>!`,
         });
       } else {
-        interaction.reply({
+        return await interaction.reply({
           content: `Ты не можешь решить судьбу других!`,
           ephemeral: true,
         });
@@ -332,6 +341,8 @@ async function main() {
     clanDelete,
     clanRequests,
     clanInvite,
+    clanAccept,
+    clanDecline,
   ];
 
   try {

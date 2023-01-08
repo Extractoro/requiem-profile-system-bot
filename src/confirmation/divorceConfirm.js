@@ -1,7 +1,7 @@
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
 
 module.exports = async (interaction, couple) => {
-  await interaction.reply({
+  return await interaction.reply({
     content: `<@${couple.discordFirstId}>, <@${couple.discordSecondId}> перед вами стоит выбор: разойтись или остаться вместе. Решайте умом, а не чувствами`,
     components: [
       new ActionRowBuilder().setComponents(

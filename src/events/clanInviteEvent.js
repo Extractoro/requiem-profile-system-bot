@@ -9,14 +9,14 @@ module.exports = async (interaction, clanValue) => {
   });
 
   if (!user) {
-    await interaction.reply({
+    return await interaction.reply({
       content: "Выбраный пользователь не является членом вашего клана.",
       ephemeral: true,
     });
   }
 
   if (!clan) {
-    await interaction.reply({
+    return await interaction.reply({
       content: "Вы не являетесь лидером клана.",
       ephemeral: true,
     });
@@ -36,7 +36,7 @@ module.exports = async (interaction, clanValue) => {
 
     await res.save().catch(console.error);
 
-    await interaction.reply({
+    return await interaction.reply({
       content: "Ваш хелпер клана изменен!",
       ephemeral: true,
     });

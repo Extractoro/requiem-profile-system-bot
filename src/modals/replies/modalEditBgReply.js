@@ -41,7 +41,7 @@ module.exports = async (interaction) => {
 
   await result.save().catch(console.error);
 
-  await interaction.reply({
+  return await interaction.reply({
     content: "Ваш фон успешно изменен.",
     ephemeral: true,
   });

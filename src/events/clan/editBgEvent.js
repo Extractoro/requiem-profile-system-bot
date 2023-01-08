@@ -9,7 +9,7 @@ module.exports = async (interaction, clanUrl) => {
   });
 
   if (!clan) {
-    await interaction.reply({
+    return await interaction.reply({
       content: "Вы не состоите в клане или у вас нет прав на редактирование.",
       ephemeral: true,
     });
@@ -26,7 +26,7 @@ module.exports = async (interaction, clanUrl) => {
 
     await result.save().catch(console.error);
 
-    await interaction.reply({
+    return await interaction.reply({
       content: "Ваш фон клана изменен!",
       ephemeral: true,
     });

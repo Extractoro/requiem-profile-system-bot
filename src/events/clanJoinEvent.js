@@ -26,14 +26,14 @@ module.exports = async (interaction, clanName) => {
   };
 
   if (!clan) {
-    await interaction.reply({
+    return await interaction.reply({
       content: "Такого названия клана нет.",
       ephemeral: true,
     });
   }
 
   if (!user) {
-    await interaction.reply({
+    return await interaction.reply({
       content: "Ты уже в клане.",
       ephemeral: true,
     });
@@ -57,13 +57,13 @@ module.exports = async (interaction, clanName) => {
       clanMembers: [...clan.clanMembers, member],
     });
 
-    await interaction.reply({
+    await result.save().catch(console.error);
+    await res.save().catch(console.error);
+
+    return await interaction.reply({
       content: `Вы присоединились к клану ${clanName}.`,
       ephemeral: true,
     });
-
-    await result.save().catch(console.error);
-    await res.save().catch(console.error);
   }
 
   if (
@@ -74,9 +74,9 @@ module.exports = async (interaction, clanName) => {
   ) {
     for (let user of clan.clanRequests) {
       if (user.memberId === interaction.user.id) {
-        await interaction.channel.send(
-          `<@${interaction.user.id}>, Вы уже отправили запрос в этот клан.`
-        );
+        return await interaction.reply({
+          content: `<@${interaction.user.id}>, Вы уже отправили запрос в этот клан.`,
+        });
       } else {
         const res = await Clan.findByIdAndUpdate(clan?._id, {
           clanRequests: [...clan.clanRequests, memberRequest],
@@ -84,7 +84,7 @@ module.exports = async (interaction, clanName) => {
 
         await res.save().catch(console.error);
 
-        await interaction.reply({
+        return await interaction.reply({
           content: `Вы отправили заявку на вступление. Дождитесь, пока вас примут.`,
           ephemeral: true,
         });
@@ -93,7 +93,7 @@ module.exports = async (interaction, clanName) => {
   }
 
   if (user && clan && clan.clanPrivacy === "close") {
-    await interaction.reply({
+    return await interaction.reply({
       content: "Этот клан закрыл для новых игроков.",
       ephemeral: true,
     });

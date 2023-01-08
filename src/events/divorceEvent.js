@@ -10,7 +10,7 @@ module.exports = async (interaction) => {
   });
 
   if (couple === null) {
-    await interaction.reply({
+    return await interaction.reply({
       content: "К сожалению, вас нет брака! Возможно, это и к счастью. :)",
       ephemeral: true,
     });
@@ -19,7 +19,7 @@ module.exports = async (interaction) => {
   if (couple && couple.coupleConfirm === false) {
     await Couple.findByIdAndDelete(couple?._id);
 
-    await interaction.reply({
+    return await interaction.reply({
       content: "Ваше предложение в браке отклонено.",
       ephemeral: true,
     });

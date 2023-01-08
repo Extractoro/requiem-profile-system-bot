@@ -22,7 +22,7 @@ module.exports = async (interaction, clanValue) => {
   }
 
   if (!clan) {
-    await interaction.reply({
+    return await interaction.reply({
       content: "Вы не состоите в клане или у вас нет прав на редактирование.",
       ephemeral: true,
     });
@@ -39,7 +39,7 @@ module.exports = async (interaction, clanValue) => {
 
     await result.save().catch(console.error);
 
-    await interaction.reply({
+    return await interaction.reply({
       content: "Ваш цвет бокса клана изменен!",
       ephemeral: true,
     });

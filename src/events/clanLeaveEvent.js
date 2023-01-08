@@ -11,7 +11,7 @@ module.exports = async (interaction) => {
   });
 
   if (user && user.userClan === "Отсутствует") {
-    await interaction.reply({
+    return await interaction.reply({
       content: "У тебя нет клана.",
       ephemeral: true,
     });
@@ -51,7 +51,7 @@ module.exports = async (interaction) => {
     await result.save().catch(console.error);
     await res.save().catch(console.error);
 
-    await interaction.reply({
+    return await interaction.reply({
       content: `Вы покинули клан`,
       ephemeral: true,
     });
@@ -85,7 +85,7 @@ module.exports = async (interaction) => {
     await result.save().catch(console.error);
     await res.save().catch(console.error);
 
-    await interaction.reply({
+    return await interaction.reply({
       content: `Вы покинули клан`,
       ephemeral: true,
     });
@@ -113,7 +113,7 @@ module.exports = async (interaction) => {
     await result.save().catch(console.error);
     await res.save().catch(console.error);
 
-    await interaction.reply({
+    return await interaction.reply({
       content: `Вы покинули клан`,
       ephemeral: true,
     });

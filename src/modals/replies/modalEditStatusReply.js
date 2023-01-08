@@ -15,7 +15,7 @@ module.exports = async (interaction) => {
 
   await result.save().catch(console.error);
 
-  await interaction.reply({
+  return await interaction.reply({
     content: "Ваш статус успешно изменен.",
     ephemeral: true,
   });

@@ -8,20 +8,8 @@ module.exports = async (interaction, clanValue) => {
     ],
   });
 
-  function privacyCheck() {
-    if (
-      clanValue === "open" ||
-      clanValue === "close" ||
-      clanValue === "request"
-    ) {
-      return clanValue;
-    } else {
-      return clan.clanPrivacy;
-    }
-  }
-
   if (!clan) {
-    await interaction.reply({
+    return await interaction.reply({
       content: "Вы не состоите в клане или у вас нет прав на редактирование.",
       ephemeral: true,
     });
@@ -30,7 +18,7 @@ module.exports = async (interaction, clanValue) => {
   if (clan) {
     const result = await Clan.findByIdAndUpdate(
       clan?._id,
-      { clanPrivacy: privacyCheck() },
+      { clanPrivacy: clanValue },
       {
         new: true,
       }
@@ -38,7 +26,7 @@ module.exports = async (interaction, clanValue) => {
 
     await result.save().catch(console.error);
 
-    await interaction.reply({
+    return await interaction.reply({
       content: "Ваша приватность клана изменена!",
       ephemeral: true,
     });

@@ -9,7 +9,7 @@ module.exports = async (interaction) => {
   });
 
   if (!clan) {
-    await interaction.reply({
+    return await interaction.reply({
       content: "Вы не состоите в клане или у вас нет прав на редактирование.",
       ephemeral: true,
     });
@@ -17,14 +17,14 @@ module.exports = async (interaction) => {
 
   if (clan) {
     if (clan.clanRequests.length === 0) {
-      await interaction.reply({
+      return await interaction.reply({
         content: "У вас нет новых запросов на вступление в клан.",
         ephemeral: true,
       });
     }
 
     if (clan.clanRequests.length !== 0) {
-      await interaction.reply({
+      return await interaction.reply({
         content: `Запросы на вступление клана __**${clan.clanName}**__.
         ${clan.clanRequests.map(
           (user) =>

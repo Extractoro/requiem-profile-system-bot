@@ -12,7 +12,7 @@ module.exports = async (interaction, userSelected) => {
   // если уже есть брак - запретить
 
   if (couple.coupleConfirm === false) {
-    await interaction.reply({
+    return await interaction.reply({
       content: `<@${couple.discordSecondId}>, готов(-а) ли ты, вступить в брак с <@${couple.discordFirstId}>?`,
       components: [
         new ActionRowBuilder().setComponents(

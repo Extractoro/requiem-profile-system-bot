@@ -10,14 +10,14 @@ module.exports = async (interaction, clanName) => {
   });
 
   if (!user || clan) {
-    await interaction.reply({
+    return await interaction.reply({
       content: "У тебя уже есть свой клан.",
       ephemeral: true,
     });
   }
 
   if (clanCheck) {
-    await interaction.reply({
+    return await interaction.reply({
       content: "Такое название клана уже существует.",
       ephemeral: true,
     });
@@ -50,7 +50,7 @@ module.exports = async (interaction, clanName) => {
     await clan.save().catch(console.error);
     await result.save().catch(console.error);
 
-    await interaction.reply({
+    return await interaction.reply({
       content: "Клан успешно создан!",
       ephemeral: true,
     });
