@@ -60,6 +60,8 @@ const clanAccept = require("./commands/clan/clanAccept.js");
 const clanDecline = require("./commands/clan/clanDecline.js");
 const clanAcceptEvent = require("./events/clanAcceptEvent.js");
 const clanDeclineEvent = require("./events/clanDeclineEvent.js");
+const clanKick = require("./commands/clan/clanKick.js");
+const clanKickEvent = require("./events/clanKickEvent.js");
 
 config();
 
@@ -162,6 +164,9 @@ client.on("interactionCreate", async (interaction) => {
     } else if (interaction.commandName === "decline") {
       const userValue = interaction.options.get("user").value;
       await clanDeclineEvent(interaction, userValue);
+    } else if (interaction.commandName === "kick") {
+      const userValue = interaction.options.get("user").value;
+      await clanKickEvent(interaction, userValue);
     }
   } else if (interaction.isButton()) {
     if (interaction.customId === "replenish") {
@@ -343,6 +348,7 @@ async function main() {
     clanInvite,
     clanAccept,
     clanDecline,
+    clanKick,
   ];
 
   try {

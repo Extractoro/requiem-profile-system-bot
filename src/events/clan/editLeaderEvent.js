@@ -5,7 +5,7 @@ module.exports = async (interaction, clanValue) => {
   let clan = await Clan.findOne({ clanOwnerId: interaction.user.id });
 
   let user = await User.findOne({
-    $and: [{ userClan: clan.clanName }, { discordId: clanValue }],
+    $and: [{ userClan: clan?.clanName }, { discordId: clanValue }],
   });
 
   if (!user) {

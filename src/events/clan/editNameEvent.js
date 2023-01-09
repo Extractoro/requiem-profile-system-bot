@@ -10,7 +10,7 @@ module.exports = async (interaction, clanValue) => {
   });
 
   let users = await User.find({
-    userClan: clan.clanName,
+    userClan: clan?.clanName,
   });
 
   if (!clan) {

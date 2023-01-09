@@ -1,18 +1,23 @@
-const Clan = require("../db/clanSchema.js");
+const Clan = require("../db/clanSchema");
 const User = require("../db/userSchema.js");
 
-module.exports = async (interaction) => {
+module.exports = async (interaction, userValue) => {
+  let clan = await Clan.findOne({ clanOwnerId: interaction.user.id });
+
   let user = await User.findOne({
-    discordId: interaction.user.id,
+    $and: [{ userClan: clan?.clanName }, { discordId: userValue }],
   });
 
-  let clan = await Clan.findOne({
-    clanName: user?.userClan,
-  });
-
-  if (user && user.userClan === "Отсутствует") {
+  if (!user) {
     return await interaction.reply({
-      content: "У тебя нет клана.",
+      content: "Выбраный пользователь не является членом вашего клана.",
+      ephemeral: true,
+    });
+  }
+
+  if (!clan) {
+    return await interaction.reply({
+      content: "Вы не являетесь лидером клана.",
       ephemeral: true,
     });
   }
@@ -23,45 +28,14 @@ module.exports = async (interaction) => {
     );
   }
 
-  if (
-    user &&
-    user.userClan !== "Отсутствует" &&
-    user.discordId === clan.clanOwnerId
-  ) {
-    const result = await User.findByIdAndUpdate(
-      user?._id,
-      { userClan: "Отсутствует" },
-      {
-        new: true,
-      }
-    );
-
-    const res = await Clan.findByIdAndUpdate(
-      clan?._id,
-      {
-        clanOwner: clan.clanHelper,
-        clanOwnerId: clan.clanHelperId,
-        clanMembers: newMembers,
-      },
-      {
-        new: true,
-      }
-    );
-
-    await result.save().catch(console.error);
-    await res.save().catch(console.error);
-
+  if (user && user.discordId === clan.clanOwnerId) {
     return await interaction.reply({
-      content: `Вы покинули клан`,
+      content: `Вы не можете выгнать себя.`,
       ephemeral: true,
     });
   }
 
-  if (
-    user &&
-    user.userClan !== "Отсутствует" &&
-    user.discordId === clan.clanHelperId
-  ) {
+  if (user && user.discordId === clan.clanHelperId) {
     const result = await User.findByIdAndUpdate(
       user?._id,
       { userClan: "Отсутствует" },
@@ -86,12 +60,12 @@ module.exports = async (interaction) => {
     await res.save().catch(console.error);
 
     return await interaction.reply({
-      content: `Вы покинули клан`,
+      content: `Вы выгнали <@${user.discordId}>`,
       ephemeral: true,
     });
   }
 
-  if (user && user.userClan !== "Отсутствует") {
+  if (user) {
     const result = await User.findByIdAndUpdate(
       user?._id,
       { userClan: "Отсутствует" },
@@ -114,7 +88,7 @@ module.exports = async (interaction) => {
     await res.save().catch(console.error);
 
     return await interaction.reply({
-      content: `Вы покинули клан`,
+      content: `Вы выгнали <@${user.discordId}>`,
       ephemeral: true,
     });
   }

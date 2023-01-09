@@ -1,7 +1,7 @@
 const User = require("../db/userSchema.js");
 
 module.exports = async (userCaller, userSelected) => {
-  let user = await User.findOne({ discordId: userCaller.user.id });
+  let user = await User.findOne({ discordId: userCaller?.user.id });
 
   if (user) {
     const result = await User.findByIdAndUpdate(

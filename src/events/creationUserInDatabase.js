@@ -2,7 +2,7 @@ const User = require("../db/userSchema.js");
 const mongoose = require("mongoose");
 
 module.exports = async (author) => {
-  let user = await User.findOne({ discordId: author.id });
+  let user = await User.findOne({ discordId: author?.id });
 
   if (!user) {
     user = await new User({
