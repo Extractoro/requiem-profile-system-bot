@@ -62,6 +62,10 @@ const clanAcceptEvent = require("./events/clanAcceptEvent.js");
 const clanDeclineEvent = require("./events/clanDeclineEvent.js");
 const clanKick = require("./commands/clan/clanKick.js");
 const clanKickEvent = require("./events/clanKickEvent.js");
+const clanBan = require("./commands/clan/clanBan.js");
+const clanBanEvent = require("./events/clanBanEvent.js");
+const clanUnban = require("./commands/clan/clanUnban.js");
+const clanUnbanEvent = require("./events/clanUnbanEvent.js");
 
 config();
 
@@ -167,6 +171,12 @@ client.on("interactionCreate", async (interaction) => {
     } else if (interaction.commandName === "kick") {
       const userValue = interaction.options.get("user").value;
       await clanKickEvent(interaction, userValue);
+    } else if (interaction.commandName === "ban") {
+      const userValue = interaction.options.get("user").value;
+      await clanBanEvent(interaction, userValue);
+    } else if (interaction.commandName === "unban") {
+      const userValue = interaction.options.get("user").value;
+      await clanUnbanEvent(interaction, userValue);
     }
   } else if (interaction.isButton()) {
     if (interaction.customId === "replenish") {
@@ -349,6 +359,8 @@ async function main() {
     clanAccept,
     clanDecline,
     clanKick,
+    clanBan,
+    clanUnban,
   ];
 
   try {

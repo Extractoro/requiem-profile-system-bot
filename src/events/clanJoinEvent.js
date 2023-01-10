@@ -39,11 +39,23 @@ module.exports = async (interaction, clanName) => {
     });
   }
 
+  const userInBans = clan?.clanBans.find(
+    (userBan) => userBan.userId === user.discordId
+  );
+
+  if (userInBans !== undefined) {
+    return await interaction.reply({
+      content: `К сожалению, вы забанены в этом клане.`,
+      ephemeral: true,
+    });
+  }
+
   if (
     user &&
     clan &&
     clan.clanPrivacy === "open" &&
-    clan.clanMembers.length < clan.clanLimit
+    clan.clanMembers.length < clan.clanLimit &&
+    userInBans === undefined
   ) {
     const result = await User.findByIdAndUpdate(
       user?._id,
@@ -70,7 +82,8 @@ module.exports = async (interaction, clanName) => {
     user &&
     clan &&
     clan.clanPrivacy === "request" &&
-    clan.clanMembers.length < clan.clanLimit
+    clan.clanMembers.length < clan.clanLimit &&
+    userInBans === undefined
   ) {
     for (let user of clan.clanRequests) {
       if (user.memberId === interaction.user.id) {
