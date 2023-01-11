@@ -14,7 +14,7 @@ module.exports = async (userCaller, userSelected) => {
 
   if (user && user.coupleConfirm === true) {
     await userCaller.reply({
-      content: "🤗 Дружище, ты уже в браке.",
+      content: "Дружище, ты уже в браке.",
       ephemeral: true,
     });
   }

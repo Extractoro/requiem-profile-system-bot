@@ -1,5 +1,5 @@
-const Clan = require("../../db/clanSchema");
-const User = require("../../db/userSchema.js");
+const Clan = require("../db/clanSchema");
+const User = require("../db/userSchema.js");
 
 module.exports = async (interaction, clanValue) => {
   let clan = await Clan.findOne({ clanOwnerId: interaction.user.id });

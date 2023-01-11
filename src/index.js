@@ -55,6 +55,7 @@ const clanDelete = require("./commands/clan/clanDelete.js");
 const clanDeleteEvent = require("./events/clanDeleteEvent.js");
 const clanRequests = require("./commands/clan/clanRequests.js");
 const clanRequestsEvent = require("./events/clanRequestsEvent.js");
+const clanInviteEvent = require("./events/clanInviteEvent.js");
 const clanInvite = require("./commands/clan/clanInvite.js");
 const clanAccept = require("./commands/clan/clanAccept.js");
 const clanDecline = require("./commands/clan/clanDecline.js");
@@ -63,9 +64,11 @@ const clanDeclineEvent = require("./events/clanDeclineEvent.js");
 const clanKick = require("./commands/clan/clanKick.js");
 const clanKickEvent = require("./events/clanKickEvent.js");
 const clanBan = require("./commands/clan/clanBan.js");
+const clanBans = require("./commands/clan/clanBans.js");
 const clanBanEvent = require("./events/clanBanEvent.js");
 const clanUnban = require("./commands/clan/clanUnban.js");
 const clanUnbanEvent = require("./events/clanUnbanEvent.js");
+const clanBansEvent = require("./events/clanBansEvent.js");
 
 config();
 
@@ -160,8 +163,8 @@ client.on("interactionCreate", async (interaction) => {
     } else if (interaction.commandName === "requests") {
       await clanRequestsEvent(interaction);
     } else if (interaction.commandName === "invite") {
-      const clanValue = interaction.options.get("user").value;
-      await clanRequestsEvent(interaction);
+      const userValue = interaction.options.get("user").value;
+      await clanInviteEvent(interaction, userValue);
     } else if (interaction.commandName === "accept") {
       const userValue = interaction.options.get("user").value;
       await clanAcceptEvent(interaction, userValue);
@@ -174,6 +177,8 @@ client.on("interactionCreate", async (interaction) => {
     } else if (interaction.commandName === "ban") {
       const userValue = interaction.options.get("user").value;
       await clanBanEvent(interaction, userValue);
+    } else if (interaction.commandName === "bans") {
+      await clanBansEvent(interaction);
     } else if (interaction.commandName === "unban") {
       const userValue = interaction.options.get("user").value;
       await clanUnbanEvent(interaction, userValue);
@@ -360,6 +365,7 @@ async function main() {
     clanDecline,
     clanKick,
     clanBan,
+    clanBans,
     clanUnban,
   ];
 

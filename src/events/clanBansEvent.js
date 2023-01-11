@@ -16,19 +16,19 @@ module.exports = async (interaction) => {
   }
 
   if (clan) {
-    if (clan.clanRequests.length === 0) {
+    if (clan.clanBans.length === 0) {
       return await interaction.reply({
-        content: "У вас нет новых запросов на вступление в клан.",
+        content: "У вас нет банов в клане",
         ephemeral: true,
       });
     }
 
-    if (clan.clanRequests.length !== 0) {
+    if (clan.clanBans.length !== 0) {
       return await interaction.reply({
-        content: `Запросы на вступление клана __**${clan.clanName}**__.
-        ${clan.clanRequests.map(
+        content: `Баны клана __**${clan.clanName}**__.
+        ${clan.clanBans.map(
           (user) =>
-            `\n${user.memberName}#${user.memberDiscriminator} (${user.memberId})`
+            `\n${user.userName}#${user.userDiscriminator} (${user.userId})`
         )}`,
       });
     }

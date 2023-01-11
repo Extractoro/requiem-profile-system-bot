@@ -29,6 +29,7 @@ module.exports = async (interaction, userValue) => {
 
     var newMemberBan = {
       userName: user.discordName,
+      userDiscriminator: user.discordHashtag,
       userId: user.discordId,
     };
   }
