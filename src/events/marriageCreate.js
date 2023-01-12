@@ -13,14 +13,14 @@ module.exports = async (userCaller, userSelected) => {
   // Нельзя отправить самому себе
 
   if (user && user.coupleConfirm === true) {
-    await userCaller.reply({
+    return await userCaller.reply({
       content: "Дружище, ты уже в браке.",
       ephemeral: true,
     });
   }
 
   if (user && user.coupleConfirm === false) {
-    await userCaller.reply({
+    return await userCaller.reply({
       content:
         "Твое предложение еще не принято, дождись ответа от своего партнера. Если он(-а) не отвечает долгое время, то пропиши команду /divorce.\n\n❗ Если ты не в браке, то значит тому кому ты делаешь предложение уже занят!",
       ephemeral: true,
