@@ -1,27 +1,30 @@
 const { Schema, model } = require("mongoose");
 
-const coupleSchema = new Schema({
-  _id: Schema.Types.ObjectId,
-  discordFirstId: { type: String },
-  discordFirstName: { type: String },
-  discordFirstHashtag: { type: String },
-  discordFirstAvatar: { type: String },
-  discordSecondId: { type: String },
-  discordSecondName: { type: String },
-  discordSecondHashtag: { type: String },
-  discordSecondAvatar: { type: String },
-  coupleBackground: {
-    type: String,
-    default: "https://www.colorhexa.com/161616.png",
+const coupleSchema = new Schema(
+  {
+    _id: Schema.Types.ObjectId,
+    discordFirstId: { type: String },
+    discordFirstName: { type: String },
+    discordFirstHashtag: { type: String },
+    discordFirstAvatar: { type: String },
+    discordSecondId: { type: String },
+    discordSecondName: { type: String },
+    discordSecondHashtag: { type: String },
+    discordSecondAvatar: { type: String },
+    coupleBackground: {
+      type: String,
+      default: "https://www.colorhexa.com/161616.png",
+    },
+    coupleBox: {
+      type: String,
+      default: "#435",
+    },
+    coupleStatus: { type: String, default: "Отсутствует" },
+    coupleBalance: { type: Number, default: 0 },
+    coupleEquipment: { type: Array, default: [] },
+    coupleConfirm: { type: Boolean, default: false },
   },
-  coupleBox: {
-    type: String,
-    default: "#435",
-  },
-  coupleStatus: { type: String, default: "Отсутствует" },
-  coupleBalance: { type: Number, default: 0 },
-  coupleEquipment: { type: Array, default: [] },
-  coupleConfirm: { type: Boolean, default: false },
-});
+  { strict: true }
+);
 
 module.exports = model("couple", coupleSchema, "couples");

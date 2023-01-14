@@ -1,24 +1,38 @@
-const { Invite } = require("discord.js");
 const inviteConfirm = require("../confirmation/inviteConfirm");
 const Clan = require("../db/clanSchema");
 const User = require("../db/userSchema.js");
 
 module.exports = async (interaction, userValue) => {
-  let clan = await Clan.findOne({
-    $and: [
-      { clanOwnerId: interaction.user.id },
-      { $not: [{ clanInvitation: { $elemMatch: { userId: userValue } } }] },
-      { $not: [{ clanBans: { $elemMatch: { userId: userValue } } }] },
-    ],
+  let clanCheck = await Clan.findOne({
+    "clanInvitation.userId": userValue,
   });
-  console.log(clan);
 
-  if (!clan) {
+  if (clanCheck) {
     return await interaction.reply({
-      content: "Вы не являетесь лидером клана.",
+      content: "У выбраннго человека уже есть приглашение в клан",
       ephemeral: true,
     });
   }
+
+  let clan = await Clan.findOne({
+    $and: [
+      { clanOwnerId: interaction.user.id },
+      {
+        "clanBans.userId": { $ne: userValue },
+      },
+    ],
+  });
+
+  if (!clan) {
+    return await interaction.reply({
+      content:
+        "Вы не являетесь лидером клана или выбранный человек забанен на вход",
+      ephemeral: true,
+    });
+  }
+
+  console.log("clan", clan);
+  console.log("clanCheck", clanCheck);
 
   let user = await User.findOne({
     $and: [{ userClan: "Отсутствует" }, { discordId: userValue }],
